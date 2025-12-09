@@ -1,4 +1,5 @@
 import unittest
+from tenebris import Dual
 
 
 class Test(unittest.TestCase):
