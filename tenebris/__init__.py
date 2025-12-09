@@ -1,8 +1,63 @@
+def operator(f):
+    def wrapper(self, other):
+        if isinstance(other, Dual):
+            return f(self, other)
+        return f(self, Dual(other))
+    return wrapper
+
+
 class Dual:
-    def __init__(self, a, b):
+    def __init__(self, a, b=0):
+        if isinstance(a, Dual):
+            self.a = a.a
+            self.b = a.b
+            return
         self.a = a
         self.b = b
 
-    @staticmethod
-    def add(a, b):
-        return a + b
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        if self.b == 0:
+            return str(self.a)
+        return f"{self.a} + ε{self.b}"
+
+    def __neg__(self):
+        return Dual(-1 * self.a, -1 * self.b)
+
+    def __pos__(self):
+        return self
+
+    @operator
+    def __add__(self, other):
+        return Dual(self.a + other.a, self.b + other.b)
+
+    def __radd__(self, other):
+        return Dual(other) + self
+
+    @operator
+    def __sub__(self, other):
+        return Dual(self.a - other.a, self.b - other.b)
+
+    def __rsub__(self, other):
+        return Dual(other) - self
+
+    @operator
+    def __mul__(self, other):
+        return Dual(self.a * other.a, self.a * other.b + self.b * other.a)
+
+    def __rmul__(self, other):
+        return Dual(other) * self
+
+    @operator
+    def __truediv__(self, other):
+        if other.a == 0:
+            raise ZeroDivisionError
+        return Dual(self.a / other.a, (self.b * other.a - self.a * other.b) / (other.a ** 2))
+
+    def __rtruediv__(self, other):
+        return Dual(other) / self
+
+
+d = lambda f: lambda x: Dual(f(Dual(x, 1))).b
