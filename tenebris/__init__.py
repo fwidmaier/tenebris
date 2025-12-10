@@ -3,6 +3,7 @@ def operator(f):
         if isinstance(other, Dual):
             return f(self, other)
         return f(self, Dual(other))
+
     return wrapper
 
 
@@ -56,4 +57,4 @@ class Dual:
         return Dual(other) / self
 
 
-d = lambda f, n=1: d(d(f), n - 1) if n > 1 else lambda x: f(Dual(x, 1)).b
+d = lambda f, n=1: d(d(f), n - 1) if n > 1 else lambda x: (lambda t: t.b if isinstance(t, Dual) else 0)(f(Dual(x, 1)))
