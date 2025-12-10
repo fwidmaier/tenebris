@@ -3,15 +3,12 @@ def operator(f):
         if isinstance(other, Dual):
             return f(self, other)
         return f(self, Dual(other))
+
     return wrapper
 
 
 class Dual:
     def __init__(self, a, b=0):
-        if isinstance(a, Dual):
-            self.a = a.a
-            self.b = a.b
-            return
         self.a = a
         self.b = b
 
@@ -60,4 +57,4 @@ class Dual:
         return Dual(other) / self
 
 
-d = lambda f: lambda x: Dual(f(Dual(x, 1))).b
+d = lambda f, n=1: d(d(f), n - 1) if n > 1 else lambda x: (lambda t: t.b if isinstance(t, Dual) else 0)(f(Dual(x, 1)))
