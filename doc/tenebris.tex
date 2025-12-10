@@ -1,0 +1,62 @@
+\documentclass[a4paper, 11pt]{article}
+
+\usepackage{mlmodern}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage[margin=2cm]{geometry}
+
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape\bfseries}
+
+\usepackage{qrcode}
+\usepackage{collectbox}
+
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newcommand{\tenebris}{\texttt{tenebris}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Duals}[1]{#1[\varepsilon]/\left\langle\varepsilon^2\right\rangle}
+
+\makeatletter
+\newcommand{\boxedcode}{%
+    \collectbox{%
+        \setlength{\fboxsep}{5pt}%
+        \fbox{\BOXCONTENT}%
+    }%
+}
+\makeatother
+
+\title{\bfseries\sffamily Some notes on \tenebris{}}
+\author{Felix Widmaier}
+\date{\today}
+
+\begin{document}
+    \maketitle
+    \begin{abstract}
+        A small and simple \texttt{Python} library that supports automatic differentiation using
+        dual numbers and solving some simple equations.
+    \end{abstract}
+
+    \section*{Getting started}
+\addcontentsline{toc}{section}{Getting started}
+The code of \tenebris{} was originally published on
+\begin{center}
+    \qrcode{https://github.com/fwidmaier/tenebris}\\
+    \vspace*{0.5cm}
+    \href{https://github.com/fwidmaier/tenebris}{\url{https://github.com/fwidmaier/tenebris}}
+\end{center}
+To install the library, simply use
+\begin{center}
+    \boxedcode{\texttt{pip install dist/tenebris-1.0-py2.py3-none-any.whl}}
+\end{center}
+To build the wheel file of the library, use
+\begin{center}
+    \boxedcode{\texttt{python setup.py bdist\_wheel --universal}}
+\end{center}
+\paragraph{Dependencies.} The required packages to work with \tenebris{} are listed in \texttt{requirements.txt}.
+    \textcolor{red}{Currently, there are no dependencies. Only standard libraries are used.}
+\end{document}
