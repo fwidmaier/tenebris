@@ -4,6 +4,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
 \usepackage[margin=2cm]{geometry}
+\usepackage{listings}
 
 \usepackage{sectsty}
 \allsectionsfont{\sffamily\mdseries\upshape\bfseries}
@@ -29,6 +30,28 @@
     }%
 }
 \makeatother
+
+
+\renewcommand{\lstlistingname}{Code}
+
+\definecolor{codebg}{RGB}{230,230,230}
+\lstset {
+    breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+    breaklines=true,                 % sets automatic line breaking
+    captionpos=b,                    % sets the caption-position to bottom
+    tabsize=4,
+    %showstringspaces=false,
+    numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+    numbersep=2pt,                   % how far the line-numbers are from the code
+    numberstyle=\tiny, % the style that is used for the line-numbers
+    %upquote=true,
+    backgroundcolor = \color{codebg},
+    basicstyle=\small\ttfamily, % basic font setting
+    emph={int,char,double,float,unsigned,void,bool},
+    %emphstyle={\color{blue}},
+    escapechar=\&,
+    columns=fixed
+}
 
 \title{\bfseries\sffamily Some notes on \tenebris{}}
 \author{Felix Widmaier}
@@ -75,7 +98,7 @@ To build the wheel file of the library, use
         &= f(x) + f'(x)b\varepsilon.
     \end{align*}
     Hence $f(x + \varepsilon) = f(x) + f'(x)\varepsilon$.
-    And et voilà!
+    \texttt{Et voilà!}
     This is basically all we need for automatic differentiation using dual numbers!
     We only need to know the dual part of $f(x + \varepsilon)$ and we obtain $f'(x)$.
     \paragraph{Example.} Let us go through a little toy example in order to
@@ -91,10 +114,23 @@ To build the wheel file of the library, use
     Basic computations show
     \begin{align*}
     (a + b\varepsilon) + (c& + d\varepsilon) = a + c + (b + d)\varepsilon,\qquad(a + b\varepsilon)(c + d\varepsilon) = ac + (ad + bc)\varepsilon\\
-        &\text{and}\qquad(a + b\varepsilon)(c + d\varepsilon)^{-1} = \frac{a}{c} + \frac{bc - ad}{c^2}\qquad\text{where $c\neq 0$}.
+        &\text{and}\qquad(a + b\varepsilon)(c + d\varepsilon)^{-1} = \frac{a}{c} + \frac{bc - ad}{c^2}\varepsilon\qquad\text{where $c\neq 0$}.
     \end{align*}
     This arithmetic of dual numbers is basically encoded in the class \texttt{Dual}.
     The differentiating operator is implemented as \texttt{d}.
     It evaluates the given function on $x + \varepsilon$ (or rather \texttt{Dual(x,1)}) and returns
     the dual part of the result.
+    We can now give a small example:
+    \paragraph{Example.} A priori we can now differentiate any polynomial!
+    For example, consider the function $f\colon x\mapsto x^2-x-1$.
+    We expect the derivative to vanish at $\frac{1}{2}$.
+    Using \tenebris{}, we can write the following little piece of code:
+    \begin{lstlisting}
+from tenebris import d
+
+f = lambda x: x * x - x - 1
+df = d(f)  # the derivative of f. This is literally al it takes!
+print(df(0.5))
+    \end{lstlisting}
+    And the output of this is \texttt{0.0} -- just as we expected.
 \end{document}
