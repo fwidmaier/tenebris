@@ -1,10 +1,13 @@
-from tenebris import d
+from tenebris import d, Dual
 
 
-def solve(f: callable, b: float, x0: float = 0, n: int = 50) -> float:
-    g = lambda x: f(x) - b
-    dg = d(g)
-    res = x0
+def solve(f: callable, b, x0: float = 0, n: int = 10) -> Dual:
+    df = d(f)
+    res = Dual(x0, 0)
     for _ in range(n):
-        res = res - g(res) / dg(res)
+        g_res = f(res) - b
+        dg_val = df(res.a)
+        if dg_val == 0:
+            raise ZeroDivisionError("zero derivative in solver!")  # TODO: better error mgs!
+        res = res - g_res / dg_val
     return res
