@@ -56,9 +56,9 @@ class Dual:
 
     @operator
     def __truediv__(self, other):
-        #if other.a == 0:
-        #    raise ZeroDivisionError
-        return Dual(self.a / other.a, (self.b * other.a - self.a * other.b) / (other.a ** 2))
+        if other.a == 0:
+            raise ZeroDivisionError
+        return Dual(self.a / other.a, (self.b * other.a - self.a * other.b) / (other.a * other.a))
 
     @operator
     def __rtruediv__(self, other):
