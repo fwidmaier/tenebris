@@ -69,4 +69,7 @@ class QualifiedSet(AbstractSet):
         return self.name
 
     def __contains__(self, item):
+        if isinstance(item, tuple):
+            if len(item) == 1:
+                item = item[0]
         return self.predicate(item)
