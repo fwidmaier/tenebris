@@ -6,6 +6,9 @@ class Expression(ABC):
         print(cls)
         return super().__new__(cls)
 
+    def __repr__(self):
+        return str(self)
+
     @abstractmethod
     def __str__(self):
         pass
