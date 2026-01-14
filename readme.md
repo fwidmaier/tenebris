@@ -5,10 +5,18 @@ capabilities of this small library. A small first-glance application is the impl
 (the square root for example):
 ````python
 from tenebris.solver import solve
+from tenebris.sets import QualifiedSet
+from tenebris.sets.decorators import domain
+from tenebris.algebra.functions import symbolic
 
-sqrt = lambda t: solve(lambda x: x * x, t, 1)
 
-print(sqrt(2))  # 1.414213562373095
+@symbolic("sqrt")
+@domain(QualifiedSet(lambda t: t >= 0))
+def sqrt(t):
+    return solve(lambda x: x * x, t, 1)
+
+
+print(sqrt(2))  # 414213562373095
 ````
 
 ## Installation

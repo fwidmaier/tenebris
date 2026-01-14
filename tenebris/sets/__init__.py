@@ -57,3 +57,16 @@ class Set(AbstractSet):
 
     def __contains__(self, item):
         return item in self.elements
+
+
+class QualifiedSet(AbstractSet):
+    def __init__(self, predicate, name="Q"):  # TODO: better naming of these sets
+        super().__init__()
+        self.predicate = predicate
+        self.name = name
+
+    def __str__(self):
+        return self.name
+
+    def __contains__(self, item):
+        return self.predicate(item)
