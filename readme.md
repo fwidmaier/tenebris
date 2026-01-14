@@ -16,7 +16,7 @@ def sqrt(t):
     return solve(lambda x: x * x, t, 1)
 
 
-print(sqrt(2))  # 414213562373095
+print(sqrt(2))  # 1.414213562373095
 ````
 
 ## Installation
