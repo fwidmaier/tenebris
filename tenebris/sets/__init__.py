@@ -43,6 +43,6 @@ class CrossProduct(Associative, Set):
         super().__init__("×", None, *sets)
 
     def __contains__(self, item):
-        assert len(item) == len(self.expressions)
+        if len(item) != len(self.expressions):
+            return False
         return all(item[i] in self.expressions[i] for i in range(len(self.expressions)))
-
