@@ -40,7 +40,7 @@ class Union(Associative, Commutative, Set):
 
 class CrossProduct(Associative, Set):
     def __init__(self, *sets):
-        super().__init__("x", None, *sets)
+        super().__init__("×", None, *sets)
 
     def __contains__(self, item):
         assert len(item) == len(self.expressions)
