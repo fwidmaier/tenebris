@@ -4,7 +4,7 @@ from tenebris.algebra.expressions import Expression
 from tenebris.algebra.operations import Associative, Commutative
 
 
-class Set(Expression, ABC):
+class AbstractSet(Expression, ABC):
     @abstractmethod
     def __contains__(self, item):
         pass
@@ -22,7 +22,7 @@ class Set(Expression, ABC):
         return CrossProduct.new(self, other)
 
 
-class Intersection(Associative, Commutative, Set):
+class Intersection(Associative, Commutative, AbstractSet):
     def __init__(self, *sets):
         super().__init__("∩", None, *sets)
 
@@ -30,7 +30,7 @@ class Intersection(Associative, Commutative, Set):
         return all(item in s for s in self.expressions)
 
 
-class Union(Associative, Commutative, Set):
+class Union(Associative, Commutative, AbstractSet):
     def __init__(self, *sets):
         super().__init__("∪", None, *sets)
 
@@ -38,7 +38,7 @@ class Union(Associative, Commutative, Set):
         return any(item in s for s in self.expressions)
 
 
-class CrossProduct(Associative, Set):
+class CrossProduct(Associative, AbstractSet):
     def __init__(self, *sets):
         super().__init__("×", None, *sets)
 
@@ -46,3 +46,14 @@ class CrossProduct(Associative, Set):
         if len(item) != len(self.expressions):
             return False
         return all(item[i] in self.expressions[i] for i in range(len(self.expressions)))
+
+
+class Set(AbstractSet):
+    def __init__(self, *elements):
+        self.elements = list(set(elements))
+
+    def __str__(self):
+        return "{" + f"{', '.join(list(map(str, self.elements)))}" + "}"
+
+    def __contains__(self, item):
+        return item in self.elements

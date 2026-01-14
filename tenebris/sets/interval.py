@@ -1,7 +1,7 @@
-from tenebris.sets import Set
+from tenebris.sets import AbstractSet
 
 
-class Interval(Set):
+class Interval(AbstractSet):
     def __init__(self, a, b):
         super().__init__()
         self.a = a
