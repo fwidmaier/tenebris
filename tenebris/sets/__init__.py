@@ -1,7 +1,16 @@
 from abc import ABC, abstractmethod
+from collections.abc import Set as AbstractPySet
 
 from tenebris.algebra.expressions import Expression
-from tenebris.algebra.operations import Associative, Commutative
+from tenebris.algebra.operations import Associative, Commutative, UnaryOperation
+
+
+def set_operator(func):
+    def wrapper(self, other):
+        if isinstance(other, AbstractPySet):
+            other = FiniteSet(*other)
+        return func(self, other)
+    return wrapper
 
 
 class AbstractSet(Expression, ABC):
@@ -12,14 +21,32 @@ class AbstractSet(Expression, ABC):
     def __call__(self, *args, **kwargs):
         raise NotImplementedError("Sets are not callable.")
 
+    def __neg__(self):
+        return Complement.new(self)
+
+    @set_operator
     def __and__(self, other):
         return Intersection.new(self, other)
 
+    @set_operator
     def __or__(self, other):
         return Union.new(self, other)
 
+    @set_operator
+    def __sub__(self, other):
+        return Intersection.new(self, -other)
+
+    @set_operator
     def times(self, other):
         return CrossProduct.new(self, other)
+
+
+class Complement(UnaryOperation, AbstractSet):
+    def __init__(self, s):
+        super().__init__("~", None, s)
+
+    def __contains__(self, item):
+        return item not in self.expressions[0]
 
 
 class Intersection(Associative, Commutative, AbstractSet):
@@ -48,9 +75,10 @@ class CrossProduct(Associative, AbstractSet):
         return all(item[i] in self.expressions[i] for i in range(len(self.expressions)))
 
 
-class Set(AbstractSet):
+class FiniteSet(AbstractSet):
     def __init__(self, *elements):
-        self.elements = list(set(elements))
+        super().__init__()
+        self.elements = frozenset(elements)
 
     def __str__(self):
         return "{" + f"{', '.join(list(map(str, self.elements)))}" + "}"
@@ -73,3 +101,6 @@ class QualifiedSet(AbstractSet):
             if len(item) == 1:
                 item = item[0]
         return self.predicate(item)
+
+
+EmptySet = QualifiedSet(lambda x: False, "∅")
